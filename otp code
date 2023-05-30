@@ -1,0 +1,169 @@
+otp code 
+
+add edittext list from here     private lateinit var otpEditTextList: Array<AppCompatEditText>
+
+
+  private fun initOtpUi(){  
+        otpEditTextList = arrayOf(
+        binding.otpLayout.otpEditText1,
+        binding.otpLayout.otpEditText2,
+        binding.otpLayout.otpEditText3,
+        binding.otpLayout.otpEditText4,
+        binding.otpLayout.otpEditText5,
+        binding.otpLayout.otpEditText6
+    )
+        for (i in otpEditTextList.indices) {
+            otpEditTextList[i].setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
+                    if (i > 0) {
+                        otpEditTextList[i - 1].requestFocus()
+                    }
+                }
+                false
+            }
+
+            otpEditTextList[i].addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (count == 1 && i < otpEditTextList.size - 1) {
+                        otpEditTextList[i + 1].requestFocus()
+                    }
+                    if(i==5){
+                        submitOtp()
+                    }
+                }
+
+                override fun afterTextChanged(t: Editable?) {
+
+                }
+            })
+
+            otpEditTextList[i].setOnFocusChangeListener { _, hasFocus ->
+                otpEditTextList[i].setBackgroundResource(
+                    if (hasFocus) com.rodeo.uilibrary.R.drawable.border_green_edittext //green
+                    else com.rodeo.uilibrary.R.drawable.border_grey_edittext //grey
+                )
+            }
+        }
+    }
+    
+     private fun validateOtp(): Boolean {
+        // Replace this with OTP validation logic
+        return otpEditTextList.joinToString("") { it.text.toString() } == "123456"
+    }
+
+    private fun setOtpError(isError: Boolean) {
+        //otpErrorMsg.visibility = if (isError) View.VISIBLE else View.GONE
+        val borderRes =
+            if (isError) com.rodeo.uilibrary.R.drawable.border_red_edittext //red
+            else com.rodeo.uilibrary.R.drawable.border_grey_edittext //grey
+
+        otpEditTextList.forEach { it.setBackgroundResource(borderRes) }
+    }
+
+    private fun submitOtp() {
+       // Call this function when the user submits the OTP
+        val isValid = validateOtp()
+        setOtpError(!isValid)
+    }
+    
+    xml file : 
+    <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_1"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toStartOf="@id/otp_edit_text_2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_2"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toStartOf="@id/otp_edit_text_3"
+        app:layout_constraintStart_toEndOf="@id/otp_edit_text_1"
+        app:layout_constraintTop_toTopOf="@id/otp_edit_text_1"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_3"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toStartOf="@id/otp_edit_text_4"
+        app:layout_constraintStart_toEndOf="@id/otp_edit_text_2"
+        app:layout_constraintTop_toTopOf="@id/otp_edit_text_2"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_4"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toStartOf="@id/otp_edit_text_5"
+        app:layout_constraintStart_toEndOf="@id/otp_edit_text_3"
+        app:layout_constraintTop_toTopOf="@id/otp_edit_text_3"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_5"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toStartOf="@id/otp_edit_text_6"
+        app:layout_constraintStart_toEndOf="@id/otp_edit_text_4"
+        app:layout_constraintTop_toTopOf="@id/otp_edit_text_4"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/otp_edit_text_6"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/otp_edit_text_5"
+        app:layout_constraintTop_toTopOf="@id/otp_edit_text_5"
+        app:layout_constraintWidth_percent="0.15"
+        android:background="@drawable/border_grey_edittext"
+        android:inputType="number"
+        android:maxLength="1"
+        android:gravity="center"
+        android:textSize="20sp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
